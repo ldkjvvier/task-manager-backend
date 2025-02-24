@@ -24,4 +24,12 @@ const TaskSchema = new Schema<ITask>(
   { timestamps: true }
 )
 
+TaskSchema.set('toJSON', {
+  transform: (_doc, ret) => {
+    ret.id = ret._id.toString()
+    delete ret._id
+    delete ret.__v
+  }
+})
+
 export const TaskModel = mongoose.model<ITask>('Task', TaskSchema)
