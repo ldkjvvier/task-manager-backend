@@ -1,57 +1,53 @@
 import { Task } from '../models/Task'
+import { TaskModel } from '../schemas/Task'
 
 export class TaskService {
-  private static tasks: Task[] = [
-    {
-      id: '1',
-      title: 'Tarea 1',
-      description: 'Descripción 1',
-      dueDate: new Date(),
-      status: 'pending',
-      priority: 'high'
-    },
-    {
-      id: '2',
-      title: 'Tarea 2',
-      description: 'Descripción 2',
-      dueDate: new Date(),
-      status: 'pending',
-      priority: 'medium'
-    }
-  ]
-
   /* Obtener todas las tareas */
-  static getTasks(): Task[] {
-    return this.tasks
+  public static async getTasks(): Promise<Task[]> {
+    return await TaskModel.find()
   }
 
   /* Crear una tarea */
-  static createTask(taskData: Omit<Task, 'id'>): Task {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      ...taskData
-    }
-    this.tasks.push(newTask)
-    return newTask
+  public static async createTask(taskData: Omit<Task, 'id'>): Promise<Task> {
+    const newTask = await new TaskModel(taskData).save()
+
+    return {
+      id: newTask.id.toString(),
+      title: newTask.title,
+      description: newTask.description,
+      dueDate: newTask.dueDate,
+      status: newTask.status,
+      priority: newTask.priority
+    } as Task
   }
 
   /* Actualizar una tarea */
-  static updateTask(id: string, taskData: Omit<Task, 'id'>): Task | null {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id)
+  static async updateTask(
+    id: string,
+    taskData: Partial<Omit<Task, 'id'>>
+  ): Promise<Task | null> {
+    const updatedTask = await TaskModel.findByIdAndUpdate(id, taskData, {
+      new: true,
+      runValidators: true
+    })
 
-    if (taskIndex === -1) return null
+    if (!updatedTask) return null
 
-    this.tasks[taskIndex] = { id, ...taskData }
-    return this.tasks[taskIndex]
+    return updatedTask
+      ? ({
+          id: updatedTask.id.toString(),
+          title: updatedTask.title,
+          description: updatedTask.description,
+          dueDate: updatedTask.dueDate,
+          status: updatedTask.status,
+          priority: updatedTask.priority
+        } as Task)
+      : null
   }
 
   /* Eliminar una tarea */
-  static deleteTask(id: string): boolean {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id)
-
-    if (taskIndex === -1) return false
-
-    this.tasks.splice(taskIndex, 1)
-    return true
+  static async deleteTask(id: string): Promise<boolean> {
+    const deletedTask = await TaskModel.findByIdAndDelete(id)
+    return !!deletedTask
   }
 }

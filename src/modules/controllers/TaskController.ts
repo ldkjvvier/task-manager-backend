@@ -3,68 +3,76 @@ import { TaskService } from '../services/Task'
 
 export class TaskController {
   /* Obtener todas las tareas */
-  public static getTasks(_req: Request, res: Response): void {
-    const tasks = TaskService.getTasks()
-    res.json(tasks)
+  public static async getTasks(_req: Request, res: Response): Promise<void> {
+    try {
+      const tasks = await TaskService.getTasks()
+      res.json(tasks)
+    } catch (error) {
+      res.status(500).json({ message: 'Error al obtener tareas' })
+    }
   }
 
   /* Crear una nueva tarea */
-  public static createTask(req: Request, res: Response): Response | void {
-    const { title, description, dueDate, status, priority } = req.body
+  public static async createTask(req: Request, res: Response): Promise<void> {
+    try {
+      const { title, description, dueDate, status, priority } = req.body
 
-    if (!title || !description || !dueDate || !status || !priority) {
-      return res
-        .status(400)
-        .json({ message: 'Todos los campos son obligatorios' })
+      // Validación de datos requeridos
+      if (!title || !dueDate || !status || !priority) {
+        res
+          .status(400)
+          .json({ message: 'Todos los campos requeridos menos descripción' })
+        return
+      }
+
+      const newTask = await TaskService.createTask({
+        title,
+        description,
+        dueDate: new Date(dueDate),
+        status,
+        priority
+      })
+
+      res.status(201).json(newTask)
+    } catch (error) {
+      res.status(500).json({ message: 'Error al crear tarea' })
     }
-
-    const newTask = TaskService.createTask({
-      title,
-      description,
-      dueDate: new Date(dueDate),
-      status,
-      priority
-    })
-
-    res.status(201).json(newTask)
   }
 
   /* Actualizar una tarea */
-  public static updateTask(req: Request, res: Response): Response | void {
-    const { id } = req.params
-    const { title, description, dueDate, status, priority } = req.body
+  static async updateTask(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+      const taskData = req.body
 
-    if (!title || !description || !dueDate || !status || !priority) {
-      return res
-        .status(400)
-        .json({ message: 'Todos los campos son obligatorios' })
+      const updatedTask = await TaskService.updateTask(id, taskData)
+      console.log(taskData)
+      if (!updatedTask) {
+        return res.status(404).json({ message: 'Task not found' })
+      }
+
+      return res.json(updatedTask)
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal Server Error' })
     }
-
-    const updatedTask = TaskService.updateTask(id, {
-      title,
-      description,
-      dueDate: new Date(dueDate),
-      status,
-      priority
-    })
-
-    if (!updatedTask) {
-      return res.status(404).json({ message: 'Task not found' })
-    }
-
-    res.json(updatedTask)
   }
 
   /* Eliminar una tarea */
-  public static deleteTask(req: Request, res: Response): Response {
-    const { id } = req.params
+  static async deleteTask(req: Request, res: Response) {
+    try {
+      const { id } = req.params
 
-    const isDeleted = TaskService.deleteTask(id)
+      const isDeleted = await TaskService.deleteTask(id)
 
-    if (!isDeleted) {
-      return res.status(404).json({ message: 'Task not found' })
+      if (!isDeleted) {
+        return res.status(404).json({ message: 'Task not found' })
+      }
+
+      return res.status(204).send()
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ message: 'Internal Server Error' })
     }
-
-    return res.status(204).send()
   }
 }
