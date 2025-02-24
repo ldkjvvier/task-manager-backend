@@ -1,52 +1,70 @@
-// src/controllers/TaskController.ts
 import { Request, Response } from 'express'
-import { Task } from '../modules/Task'
+import { TaskService } from '../services/Task'
 
 export class TaskController {
-  private static tasks: Task[] = [
-    {
-      id: '1',
-      title: 'Tarea 1',
-      description: 'Descripción 1',
-      dueDate: new Date(),
-      status: 'pending',
-      priority: 'high'
-    },
-    {
-      id: '2',
-      title: 'Tarea 2',
-      description: 'Descripción 2',
-      dueDate: new Date(),
-      status: 'pending',
-      priority: 'medium'
-    },
-    {
-      id: '3',
-      title: 'Tarea 3',
-      description: 'Descripción 3',
-      dueDate: new Date(),
-      status: 'completed',
-      priority: 'low'
-    },
-    {
-      id: '4',
-      title: 'Tarea 4',
-      description: 'Descripción 4',
-      dueDate: new Date(),
-      status: 'pending',
-      priority: 'medium'
-    },
-    {
-      id: '5',
-      title: 'Tarea 5',
-      description: 'Descripción 5',
-      dueDate: new Date(),
-      status: 'pending',
-      priority: 'high'
-    }
-  ]
-
+  /* Obtener todas las tareas */
   public static getTasks(_req: Request, res: Response): void {
-    res.json(TaskController.tasks)
+    const tasks = TaskService.getTasks()
+    res.json(tasks)
+  }
+
+  /* Crear una nueva tarea */
+  public static createTask(req: Request, res: Response): Response | void {
+    const { title, description, dueDate, status, priority } = req.body
+
+    if (!title || !description || !dueDate || !status || !priority) {
+      return res
+        .status(400)
+        .json({ message: 'Todos los campos son obligatorios' })
+    }
+
+    const newTask = TaskService.createTask({
+      title,
+      description,
+      dueDate: new Date(dueDate),
+      status,
+      priority
+    })
+
+    res.status(201).json(newTask)
+  }
+
+  /* Actualizar una tarea */
+  public static updateTask(req: Request, res: Response): Response | void {
+    const { id } = req.params
+    const { title, description, dueDate, status, priority } = req.body
+
+    if (!title || !description || !dueDate || !status || !priority) {
+      return res
+        .status(400)
+        .json({ message: 'Todos los campos son obligatorios' })
+    }
+
+    const updatedTask = TaskService.updateTask(id, {
+      title,
+      description,
+      dueDate: new Date(dueDate),
+      status,
+      priority
+    })
+
+    if (!updatedTask) {
+      return res.status(404).json({ message: 'Task not found' })
+    }
+
+    res.json(updatedTask)
+  }
+
+  /* Eliminar una tarea */
+  public static deleteTask(req: Request, res: Response): Response {
+    const { id } = req.params
+
+    const isDeleted = TaskService.deleteTask(id)
+
+    if (!isDeleted) {
+      return res.status(404).json({ message: 'Task not found' })
+    }
+
+    return res.status(204).send()
   }
 }

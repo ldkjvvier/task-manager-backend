@@ -12,7 +12,7 @@ app.use(corsMiddleware())
 
 // Routes
 app.use('/api/', userAuthRoutes)
-app.use('/api/task/', taskRoutes)
+app.use('/api/tasks/', taskRoutes)
 app.get('/ping', (_, res) => {
   res.send('pong')
 })
