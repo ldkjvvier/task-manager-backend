@@ -7,6 +7,6 @@ taskRoutes.get('/', TaskController.getTasks)
 
 taskRoutes.post('/', TaskController.createTask)
 
-taskRoutes.put('/:id', TaskController.updateTask)
+taskRoutes.patch('/:id', TaskController.updateTask)
 
 taskRoutes.delete('/:id', TaskController.deleteTask)
