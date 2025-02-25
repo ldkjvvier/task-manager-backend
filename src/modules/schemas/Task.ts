@@ -21,14 +21,14 @@ const TaskSchema = new Schema<ITask>(
       required: true
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.String,
       ref: 'User',
       required: true
     },
     categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.String,
       ref: 'Category',
-      required: true
+      nullable: true
     }
   },
   { timestamps: true }

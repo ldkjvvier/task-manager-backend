@@ -1,11 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import { User } from '../models/User'
-
-export interface Category {
-  id: string
-  name: string
-}
+import { User, Category } from '../models/User'
 
 export interface IUser extends Document, Omit<User, 'id'> {
   comparePassword(password: string): Promise<boolean>

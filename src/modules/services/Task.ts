@@ -3,8 +3,19 @@ import { TaskModel } from '../schemas/Task'
 
 export class TaskService {
   /* Obtener todas las tareas */
-  public static async getTasks(): Promise<Task[]> {
-    return await TaskModel.find()
+  public static async getTasks(userId: string): Promise<Task[]> {
+    const tasks = await TaskModel.find({ userId })
+
+    return tasks.map((task) => ({
+      id: task.id.toString(),
+      title: task.title,
+      description: task.description,
+      dueDate: task.dueDate,
+      status: task.status,
+      priority: task.priority,
+      userId: task.userId,
+      categoryId: task.categoryId
+    }))
   }
 
   /* Crear una tarea */

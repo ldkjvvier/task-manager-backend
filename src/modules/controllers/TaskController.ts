@@ -3,11 +3,26 @@ import { TaskService } from '../services/Task'
 
 export class TaskController {
   /* Obtener todas las tareas */
-  public static async getTasks(_req: Request, res: Response): Promise<void> {
+  public static async getTasks(req: Request, res: Response): Promise<void> {
     try {
-      const tasks = await TaskService.getTasks()
+      const { userId } = req.params
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is required' })
+        return
+      }
+
+      // Llamar al servicio para obtener las tareas del usuario específico
+      const tasks = await TaskService.getTasks(userId)
+
+      // Verificar si el usuario tiene tareas
+      if (!tasks || tasks.length === 0) {
+        res.status(404).json({ message: 'No tasks found for this user' })
+        return
+      }
+
       res.json(tasks)
     } catch (error) {
+      console.error(error)
       res.status(500).json({ message: 'Error al obtener tareas' })
     }
   }
@@ -15,22 +30,24 @@ export class TaskController {
   /* Crear una nueva tarea */
   public static async createTask(req: Request, res: Response): Promise<void> {
     try {
-      const { title, description, dueDate, status, priority } = req.body
-
-      // Validación de datos requeridos
-      if (!title || !dueDate || !status || !priority) {
-        res
-          .status(400)
-          .json({ message: 'Todos los campos requeridos menos descripción' })
-        return
-      }
+      const {
+        title,
+        description,
+        dueDate,
+        status,
+        priority,
+        userId,
+        categoryId
+      } = req.body
 
       const newTask = await TaskService.createTask({
         title,
         description,
         dueDate: new Date(dueDate),
         status,
-        priority
+        priority,
+        userId,
+        categoryId
       })
 
       res.status(201).json(newTask)

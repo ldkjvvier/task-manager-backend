@@ -6,6 +6,6 @@ export interface Task {
   dueDate: Date | null
   status: 'pending' | 'completed'
   priority: 'high' | 'medium' | 'low'
-  userId: Pick<User, 'id'>
-  categoryId: Pick<Category, 'id'>
+  userId: User['id']
+  categoryId?: Category['id']
 }
