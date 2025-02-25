@@ -5,7 +5,6 @@ export class UserControllers {
   // Método para iniciar sesión
   static async Login(req: Request, res: Response) {
     const { email, password } = req.body
-    console.log(req.body)
     try {
       const { user } = await UserModel.Login({ email, password })
 
@@ -65,7 +64,6 @@ export class UserControllers {
   // Crear Categoria
   static async CreateCategory(req: Request, res: Response) {
     const { id, category } = req.body
-    console.log(id, category)
     try {
       const UserCategory = await UserModel.CreateCategory(id, category)
 
