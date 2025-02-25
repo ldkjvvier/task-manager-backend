@@ -1,6 +1,7 @@
 import express from 'express'
 import { createServer } from 'http'
-import { userAuthRoutes, corsMiddleware, config } from './modules'
+import { corsMiddleware, config } from './modules'
+import { userAuthRoutes } from './routes/userAuth'
 import { taskRoutes } from './routes/Task'
 import { connectDB } from './config/db.config'
 
