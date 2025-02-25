@@ -63,7 +63,6 @@ export class TaskController {
       const taskData = req.body
 
       const updatedTask = await TaskService.UpdateTask(id, taskData)
-      console.log(taskData)
       if (!updatedTask) {
         return res.status(404).json({ message: 'Task not found' })
       }
