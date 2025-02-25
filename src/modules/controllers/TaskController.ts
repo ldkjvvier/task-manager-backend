@@ -3,7 +3,7 @@ import { TaskService } from '../services/Task'
 
 export class TaskController {
   /* Obtener todas las tareas */
-  public static async getTasks(req: Request, res: Response): Promise<void> {
+  public static async GetTasks(req: Request, res: Response): Promise<void> {
     try {
       const { userId } = req.params
       if (!userId) {
@@ -12,7 +12,7 @@ export class TaskController {
       }
 
       // Llamar al servicio para obtener las tareas del usuario específico
-      const tasks = await TaskService.getTasks(userId)
+      const tasks = await TaskService.GetTasks(userId)
 
       // Verificar si el usuario tiene tareas
       if (!tasks || tasks.length === 0) {
@@ -28,7 +28,7 @@ export class TaskController {
   }
 
   /* Crear una nueva tarea */
-  public static async createTask(req: Request, res: Response): Promise<void> {
+  public static async CreateTask(req: Request, res: Response): Promise<void> {
     try {
       const {
         title,
@@ -40,7 +40,7 @@ export class TaskController {
         categoryId
       } = req.body
 
-      const newTask = await TaskService.createTask({
+      const newTask = await TaskService.CreateTask({
         title,
         description,
         dueDate: new Date(dueDate),
@@ -57,12 +57,12 @@ export class TaskController {
   }
 
   /* Actualizar una tarea */
-  static async updateTask(req: Request, res: Response) {
+  static async UpdateTask(req: Request, res: Response) {
     try {
       const { id } = req.params
       const taskData = req.body
 
-      const updatedTask = await TaskService.updateTask(id, taskData)
+      const updatedTask = await TaskService.UpdateTask(id, taskData)
       console.log(taskData)
       if (!updatedTask) {
         return res.status(404).json({ message: 'Task not found' })
@@ -76,11 +76,11 @@ export class TaskController {
   }
 
   /* Eliminar una tarea */
-  static async deleteTask(req: Request, res: Response) {
+  static async DeleteTask(req: Request, res: Response) {
     try {
       const { id } = req.params
 
-      const isDeleted = await TaskService.deleteTask(id)
+      const isDeleted = await TaskService.DeleteTask(id)
 
       if (!isDeleted) {
         return res.status(404).json({ message: 'Task not found' })

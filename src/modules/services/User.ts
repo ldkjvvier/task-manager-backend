@@ -1,17 +1,15 @@
 import { userRegister, userLogin } from '../models/User'
 import User from '../schemas/User'
 
-export class userAuthModel {
+export class UserModel {
   // Método para iniciar sesión
-  static async login(data: userLogin) {
+  static async Login(data: userLogin) {
     try {
-      // Buscar el usuario por email
       const user = await User.findOne({ email: data.email })
       if (!user) {
         throw new Error('User not found')
       }
 
-      // Comparar la contraseña proporcionada con la almacenada
       const isMatch = await user.comparePassword(data.password)
       if (!isMatch) {
         throw new Error('Invalid password')
@@ -25,7 +23,7 @@ export class userAuthModel {
   }
 
   // Método para registrar un nuevo usuario
-  static async register(data: userRegister) {
+  static async Register(data: userRegister) {
     try {
       const user = new User({
         email: data.email,
@@ -36,6 +34,22 @@ export class userAuthModel {
     } catch (error) {
       console.log(error)
       throw new Error('Error creating user')
+    }
+  }
+
+  // Crear categoria
+  static async CreateCategory(userId: string, category: string) {
+    try {
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $push: { categories: category } },
+        { new: true }
+      )
+
+      return user
+    } catch (error) {
+      console.log(error)
+      throw new Error('Error creating category')
     }
   }
 }

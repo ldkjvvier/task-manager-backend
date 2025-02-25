@@ -3,10 +3,10 @@ import { TaskController } from '@/modules/controllers/TaskController'
 import express from 'express'
 export const taskRoutes = express.Router()
 
-taskRoutes.get('/:userId', TaskController.getTasks)
+taskRoutes.get('/:userId', TaskController.GetTasks)
 
-taskRoutes.post('/', TaskController.createTask)
+taskRoutes.post('/', TaskController.CreateTask)
 
-taskRoutes.patch('/:id', TaskController.updateTask)
+taskRoutes.patch('/:id', TaskController.UpdateTask)
 
-taskRoutes.delete('/:id', TaskController.deleteTask)
+taskRoutes.delete('/:id', TaskController.DeleteTask)

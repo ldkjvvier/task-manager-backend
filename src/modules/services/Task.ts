@@ -3,7 +3,7 @@ import { TaskModel } from '../schemas/Task'
 
 export class TaskService {
   /* Obtener todas las tareas */
-  public static async getTasks(userId: string): Promise<Task[]> {
+  public static async GetTasks(userId: string): Promise<Task[]> {
     const tasks = await TaskModel.find({ userId })
 
     return tasks.map((task) => ({
@@ -19,7 +19,7 @@ export class TaskService {
   }
 
   /* Crear una tarea */
-  public static async createTask(taskData: Omit<Task, 'id'>): Promise<Task> {
+  public static async CreateTask(taskData: Omit<Task, 'id'>): Promise<Task> {
     const newTask = await new TaskModel(taskData).save()
 
     return {
@@ -33,7 +33,7 @@ export class TaskService {
   }
 
   /* Actualizar una tarea */
-  static async updateTask(
+  static async UpdateTask(
     id: string,
     taskData: Partial<Omit<Task, 'id'>>
   ): Promise<Task | null> {
@@ -57,7 +57,7 @@ export class TaskService {
   }
 
   /* Eliminar una tarea */
-  static async deleteTask(id: string): Promise<boolean> {
+  static async DeleteTask(id: string): Promise<boolean> {
     const deletedTask = await TaskModel.findByIdAndDelete(id)
     return !!deletedTask
   }
