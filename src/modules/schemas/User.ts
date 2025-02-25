@@ -9,10 +9,6 @@ export interface IUser extends Document, Omit<User, 'id'> {
 interface IUserModel extends Model<IUser> {}
 
 const categorySchema = new Schema<Category>({
-  id: {
-    type: String,
-    required: true
-  },
   name: {
     type: String,
     required: true
@@ -67,6 +63,14 @@ userSchema.methods.comparePassword = async function (
     throw new Error('Error in comparePassword: ' + error)
   }
 }
+
+categorySchema.set('toJSON', {
+  transform: (_doc, ret) => {
+    ret.id = ret._id.toString()
+    delete ret._id
+    delete ret.__v
+  }
+})
 
 userSchema.set('toJSON', {
   transform: (_doc, ret) => {

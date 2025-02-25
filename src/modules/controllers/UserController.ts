@@ -65,13 +65,15 @@ export class UserControllers {
   // Crear Categoria
   static async CreateCategory(req: Request, res: Response) {
     const { id, category } = req.body
+    console.log(id, category)
     try {
       const UserCategory = await UserModel.CreateCategory(id, category)
 
       if (!UserCategory) {
         return res.status(400).json({ message: 'Error creating category' })
       }
-      return res.status(201).json(UserCategory)
+      const CATEGORIES = UserCategory.categories
+      return res.status(201).json(CATEGORIES)
     } catch (error) {
       return res.status(400).json({
         message: 'Error creating category',

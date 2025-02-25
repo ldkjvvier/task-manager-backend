@@ -42,7 +42,13 @@ export class UserModel {
     try {
       const user = await User.findByIdAndUpdate(
         userId,
-        { $push: { categories: category } },
+        {
+          $push: {
+            categories: {
+              name: category
+            }
+          }
+        },
         { new: true }
       )
 

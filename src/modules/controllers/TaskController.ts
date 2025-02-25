@@ -43,7 +43,7 @@ export class TaskController {
       const newTask = await TaskService.CreateTask({
         title,
         description,
-        dueDate: new Date(dueDate),
+        dueDate: dueDate ? new Date(dueDate) : null,
         status,
         priority,
         userId,
