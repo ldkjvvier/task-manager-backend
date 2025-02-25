@@ -19,6 +19,16 @@ const TaskSchema = new Schema<ITask>(
       enum: ['high', 'medium', 'low'],
       default: 'medium',
       required: true
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true
     }
   },
   { timestamps: true }

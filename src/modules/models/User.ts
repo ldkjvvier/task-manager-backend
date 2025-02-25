@@ -9,5 +9,10 @@ export interface User {
   id: string
   password: string
   email: string
-  categories: string[]
+  categories: Category[]
+}
+export interface Category {
+  id: string
+  name: string
+  userId: string
 }

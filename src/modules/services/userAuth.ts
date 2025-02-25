@@ -17,7 +17,6 @@ export class userAuthModel {
         throw new Error('Invalid password')
       }
 
-      // Devolver el usuario (la sesión se manejará en el controlador)
       return { user }
     } catch (error) {
       console.log(error)

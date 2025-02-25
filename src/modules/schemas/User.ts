@@ -2,11 +2,27 @@ import mongoose, { Schema, Document, Model } from 'mongoose'
 import bcrypt from 'bcryptjs'
 import { User } from '../models/User'
 
+export interface Category {
+  id: string
+  name: string
+}
+
 export interface IUser extends Document, Omit<User, 'id'> {
   comparePassword(password: string): Promise<boolean>
 }
 
 interface IUserModel extends Model<IUser> {}
+
+const categorySchema = new Schema<Category>({
+  id: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  }
+})
 
 const userSchema: Schema<IUser> = new Schema(
   {
@@ -23,7 +39,7 @@ const userSchema: Schema<IUser> = new Schema(
       trim: true
     },
     categories: {
-      type: [String],
+      type: [categorySchema],
       default: [],
       maxlength: 5
     }
