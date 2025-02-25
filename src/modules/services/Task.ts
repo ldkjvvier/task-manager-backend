@@ -28,7 +28,9 @@ export class TaskService {
       description: newTask.description,
       dueDate: newTask.dueDate,
       status: newTask.status,
-      priority: newTask.priority
+      priority: newTask.priority,
+      userId: newTask.userId,
+      categoryId: newTask.categoryId
     } as Task
   }
 

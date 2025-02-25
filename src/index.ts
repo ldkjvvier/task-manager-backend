@@ -18,6 +18,9 @@ app.use('/api/tasks/', taskRoutes)
 app.get('/ping', (_, res) => {
   res.send('pong')
 })
+app.get('/', (_, res) => {
+  res.send('Hello World')
+})
 
 const PORT = config.port || 5000
 server.listen(PORT, () => {
